@@ -12,6 +12,7 @@ import java.net.Socket;
  * Time: 14:13
  * To change this template use File | Settings | File Templates.
  */
+// В Java для именования классов принято следовать CameCase нотации, переименуй все классы во что-то типа PandoraBoxClient
 public class client_RRPC{
     private String server_adress = null;
     private int server_port = 0;
@@ -24,9 +25,12 @@ public class client_RRPC{
 
     public void get_result(String function_name,Object ... argv) throws IOException {
         try{
+            // где отсутпы? используй 4 пробела
         ByteArrayOutputStream msg;
         protocol_coder pc = new protocol_coder();
         msg = pc.code(function_name,argv);
+        // DebugObjectPrinter - у тебя же стандартные явовские классы перед глазами
+        // класса dubug_Object_printer в репозитории нет
         dubug_Object_printer dop = new dubug_Object_printer();
         System.out.println("Connection to server at "+server_adress+":"+((Integer)server_port).toString());
         System.out.println("SENDED DATA:");
@@ -49,6 +53,7 @@ public class client_RRPC{
     }
 }
 
+// у тебя есть точно такой же класс в папке сервер. сделай пакеты тип com.pandorabox.client и com.pandorabox.server
 class protocol_coder{
     ByteArrayOutputStream stream;
     DataOutputStream writer;
@@ -63,13 +68,18 @@ class protocol_coder{
 
         for(int i = 0; i < argc; i++){
             Object a = argv[i];
+
+            // почему бы тебе не сделать writer.writeByte(getType(a)), а в ифах только значения писать?
+
             if (a instanceof Byte){
                 //System.out.println("Byte");
+                // зачем кастуешь к байту?
                 writer.writeByte((byte) 1);
                 writer.writeByte(((Byte)argv[i]).byteValue());
             }
-
+            // else if - очевидно, что если у тебя a instanceof Byte, то оно точно не instanceof Boolean etc.
             if (a instanceof Boolean){
+                // чем тебя writer.writeBoolean(b); не устраивает?
                 //System.out.println("Boolean");
                 writer.writeByte((byte) 2);
                 if ((Boolean) argv[i]){
@@ -123,12 +133,14 @@ class protocol_coder{
                 writer.writeByte(this.GetArrayDimension(a));
                 byte type = this.GetType(a);
                 writer.writeByte(type);
+                // почему parse-то? Я тебе вообще предлагаю пользоваться терминами encodeData & decodeData
                 this.arrayParse(a,type);
             }
         }
         return stream;
     }
 
+    // getArrayDimension
     private byte GetArrayDimension(Object a){
         byte size = 0;
 
@@ -180,6 +192,8 @@ class protocol_coder{
             return 11;
         }
 
+        // и замучаешься ловить наведённые баги. если ты здесь оказался, то я это явно твой косяк программирования.
+        // кидай throw new IllegalArgumentException("Unsupported class: " + a.getClass());
         return -1;
     }
 
@@ -220,6 +234,7 @@ class protocol_coder{
     }
 
     private void arrayParseByte(Object a) throws IOException {
+        // здесь и далее, до else у тебя код повторяется - это плохо, подумай как от этого избавиться
         int length = Array.getLength(a);
         writer.writeByte(length);
         if (Array.get(a,0).getClass().isArray()){
@@ -340,9 +355,10 @@ class protocol_coder{
 
 
 
-
+// ProtocolDecoder
 class protocol_encoder{
     DataInputStream reader;
+    // decode
     public Object[] encode(InputStream stream) throws IOException{
         reader = new DataInputStream(stream);
 
@@ -360,6 +376,7 @@ class protocol_encoder{
 
             byte flag = reader.readByte();
 
+            // -1 у тебя выставляется только для массивов
             if (flag == -1){
                 return null;
             }
@@ -372,6 +389,7 @@ class protocol_encoder{
 
                 case (2)://boolean block
                     byte bool_value = reader.readByte();
+                    // data[i] == bool_value == 1
                     if (bool_value == 1){
                         data[i] = true;
                     }else{
