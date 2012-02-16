@@ -68,7 +68,7 @@ public class Encoder {
                     }
                     byte element_type = this.getType(tmp);
                     writer.writeByte(element_type);
-                    this.arrayEncode(a, element_type, null);
+                    this.arrayEncode(a, element_type, writer);
                     break;
             }
         }
@@ -136,7 +136,7 @@ public class Encoder {
                     }
                     byte element_type = this.getType(tmp);
                     writer.writeByte(element_type);
-                    this.arrayEncode(a, element_type, null);
+                    this.arrayEncode(a, element_type, writer);
                     break;
             }
         }
@@ -201,7 +201,7 @@ public class Encoder {
         writer.writeByte(length);
         if (Array.get(a, 0).getClass().isArray()) {
             for (int i = 0; i < length; i++) {
-                arrayEncode(Array.get(a, i), type, null);
+                arrayEncode(Array.get(a, i), type, writer);
             }
         } else {
             switch (type) {

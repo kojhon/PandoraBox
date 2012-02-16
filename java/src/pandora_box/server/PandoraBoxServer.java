@@ -27,7 +27,7 @@ public class PandoraBoxServer {
         Socket client_sock;
 
         server = new ServerSocket(this.serverPort);
-        System.out.printf("Server is start up at 127.0.0.1: %d\n" + serverPort);
+        System.out.printf("Server is start up at 127.0.0.1: %d\n",serverPort);
         while (true) {
             System.out.println();
             System.out.println("Waiting for client");

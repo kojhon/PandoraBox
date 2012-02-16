@@ -65,7 +65,7 @@ public class Decoder {
                 case (12):
                     int dimension = (int) reader.readByte();
                     byte type = reader.readByte();
-                    data[i] = decodeArray(dimension, type, null);
+                    data[i] = decodeArray(dimension, type, reader);
                     break;
 
                 default:
@@ -83,7 +83,7 @@ public class Decoder {
         Object[] data = new Object[length];
         if (dimension != 1) {
             for (int i = 0; i < length; i++) {
-                data[i] = decodeArray(dimension - 1, type, null);
+                data[i] = decodeArray(dimension - 1, type, reader);
             }
 
             return data;
