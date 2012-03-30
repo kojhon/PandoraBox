@@ -9,8 +9,8 @@ import java.net.Socket;
 
 public class PandoraBoxClient {
 
-    private final Encoder encoder = new Encoder();
-    private final Decoder decoder = new Decoder();
+    //private final Encoder encoder = new Encoder();
+    //private final Decoder decoder = new Decoder();
 
     private final String serverIp;
     private final int serverPort;
@@ -24,7 +24,7 @@ public class PandoraBoxClient {
         Socket socket = null;
         try {
             ByteArrayOutputStream msg;
-            msg = encoder.encodeData(function_name, argv);
+            msg = Encoder.encodeRequest(function_name, argv);
             DebugObjectPrinter dop = new DebugObjectPrinter();
             System.out.printf("Connection to server at %s:%d\n", serverIp, serverPort);
             System.out.println("SENDED DATA:");
@@ -35,7 +35,7 @@ public class PandoraBoxClient {
             out.write(msg.toByteArray());
             out.flush();
 
-            Object[] result = decoder.decodeData(socket.getInputStream());
+            Object[] result = Decoder.decodeResult(socket.getInputStream());
             System.out.println("RECIVED DATA:");
             dop.print(result);
         } catch (Exception e) {

@@ -5,8 +5,26 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Decoder {
+    public static Object[] decodeResult(InputStream stream) throws IOException {
+        DataInputStream reader = new DataInputStream(stream);
+        byte tmp = reader.readByte();
+        Object result[] = new Object[2];
+        result[0]= false;
 
-    public Object[] decodeData(InputStream stream) throws IOException {
+        if (tmp == 1){
+            result[0] = true;
+            int length = reader.readByte();
+            byte ntmp[] = new byte[length];
+            int len = reader.read(ntmp, 0, length);
+            result[1] = new String(ntmp, 0, len, "UTF-16BE");
+        }else{
+            result[1] = getElement(reader);
+        }
+
+        return result;
+    }
+
+    public static Object[] decodeRequest(InputStream stream) throws IOException {
         DataInputStream reader = new DataInputStream(stream);
 
         byte name_length = reader.readByte();
@@ -18,8 +36,16 @@ public class Decoder {
         data[0] = new String(tmp, 0, len, "UTF-16BE");
         for (int i = 1; i < count + 1; i++) {
 
-            byte flag = reader.readByte();
+            data[i] = getElement(reader);
 
+        }
+
+        return data;
+    }
+
+    private static Object getElement(DataInputStream reader) throws IOException{
+            byte flag = reader.readByte();
+            Object element;
             if (flag == -1) {
                 return null;
             }
@@ -27,58 +53,55 @@ public class Decoder {
             switch (flag) {
 
                 case (1)://byte block
-                    data[i] = reader.readByte();
+                    element = reader.readByte();
                     break;
 
                 case (2)://boolean block
                     byte bool_value = reader.readByte();
-                    data[i] = bool_value == 1;
+                    element = bool_value == 1;
                     break;
 
                 case (3)://short block
-                    data[i] = reader.readShort();
+                    element = reader.readShort();
                     break;
 
                 case (5)://int block
-                    data[i] = reader.readInt();
+                    element = reader.readInt();
                     break;
 
                 case (7)://Long block
-                    data[i] = reader.readLong();
+                    element = reader.readLong();
                     break;
 
                 case (9)://float block
-                    data[i] = reader.readFloat();
+                    element = reader.readFloat();
                     break;
 
                 case (10)://double block
-                    data[i] = reader.readDouble();
+                    element = reader.readDouble();
                     break;
 
                 case (11):
                     int length = reader.readByte();
                     byte ntmp[] = new byte[length];
-                    len = reader.read(ntmp, 0, length);
-                    data[i] = new String(ntmp, 0, len, "UTF-16BE");
+                    int len = reader.read(ntmp, 0, length);
+                    element = new String(ntmp, 0, len, "UTF-16BE");
                     break;
 
                 case (12):
                     int dimension = (int) reader.readByte();
                     byte type = reader.readByte();
-                    data[i] = decodeArray(dimension, type, reader);
+                    element = decodeArray(dimension, type, reader);
                     break;
 
                 default:
                     return null;
 
             }
-
-        }
-
-        return data;
+            return element;
     }
 
-    private Object decodeArray(int dimension, byte type, DataInputStream reader) throws IOException {
+    private static Object decodeArray(int dimension, byte type, DataInputStream reader) throws IOException {
         Byte length = reader.readByte();
         Object[] data = new Object[length];
         if (dimension != 1) {

@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.security.PublicKey;
+
 import pandora_box.server.*;
 /**
  * Created by IntelliJ IDEA.
@@ -10,6 +12,9 @@ import pandora_box.server.*;
 public class Server {
      public static void main(String[] args) throws IOException, InterruptedException {
          PandoraBoxServer s = new PandoraBoxServer(13002);
+         test_class t = new test_class();
+         s.publicateStaticMethod("conc","test_class","concat");
+         s.publicateNonstaticMethod("getMax","test_class","getArrayMax",t);
          s.start();
     }
 }
