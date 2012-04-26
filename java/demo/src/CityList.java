@@ -8,14 +8,14 @@ import java.util.LinkedList;
  * To change this template use File | Settings | File Templates.
  */
 public class CityList {
-    private static LinkedList cities = new LinkedList();
+
+    private static final LinkedList<CityWeather> cities = new LinkedList<CityWeather>();
 
     private CityList(){
-
     }
 
-    public static LinkedList getInstance(){
-        return  cities;
+    public static LinkedList<CityWeather> getInstance(){
+        return cities;
     }
 
     public static void add(String city, String weather){

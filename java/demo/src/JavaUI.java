@@ -1,9 +1,7 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,7 +10,7 @@ import java.util.LinkedList;
  * Time: 15:36
  * To change this template use File | Settings | File Templates.
  */
-public class JavaUI extends JFrame implements ActionListener{
+public class JavaUI extends JFrame {
     JTable t;
 
     public void initialize(){
@@ -34,22 +32,28 @@ public class JavaUI extends JFrame implements ActionListener{
         JButton deleteButton = new JButton("Удалить");
         buttonPanel.add(deleteButton);
         JButton insertButton = new JButton("Вставить");
-        insertButton.addActionListener(this);
-        deleteButton.addActionListener(this);
+        insertButton.addActionListener(new AddActionListener());
+        deleteButton.addActionListener(new DeleteActionListener());
         buttonPanel.add(insertButton);
         this.add(buttonPanel);
 
         this.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e){
-        if (e.getActionCommand() == "Вставить"){
-            int rowCount = CityList.getInstance().size();
-            CityList.add((String)t.getValueAt(rowCount,0),(String)t.getValueAt(rowCount,1));
-            t.setModel(new WeatherTableModel());
-            t.repaint();
-        }else{
+    private final class AddActionListener implements ActionListener {
 
+        public void actionPerformed(ActionEvent e) {
+            CityList.add("Введите город", "Введите погоду");
+            t.repaint();
         }
     }
+
+    private final class DeleteActionListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+            CityList.remove(t.getSelectedRow());
+            t.repaint();
+        }
+    }
+
 }

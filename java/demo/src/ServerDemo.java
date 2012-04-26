@@ -6,15 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 public class ServerDemo {
-    public static void main(String[] argv){
-        CityList.add("Новосибирск","+15");
-        CityList.add("Новосибирск","+15");
-        CityList.add("Новосибирск","+15");
-         CityList.add("Новосибирск","+15");
-         CityList.add("Новосибирск","+15");
-         CityList.add("Новосибирск","+15");
-         CityList.add("Новосибирск","+15");
-         CityList.add("Новосибирск","+15");
+    public static void main(String[] argv) {
+        CityList.add("Новосибирск", "+15");
+        CityList.add("Кемерово", "+20");
+        CityList.add("Омск", "+1");
         JavaUI ui = new JavaUI();
         ui.initialize();
     }
