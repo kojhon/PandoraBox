@@ -42,7 +42,7 @@ public class WeatherTableModel implements TableModel{
             case(1):
                 return "Погода";
             default:
-                return "ololo";
+                throw new IllegalArgumentException("Wrong count of columns:"+i);
         }
     }
 
