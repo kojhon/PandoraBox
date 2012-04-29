@@ -31,7 +31,7 @@ public class PandoraBoxServer {
     }
 
 
-    public void start() throws IOException, InterruptedException {
+    public void start() throws IOException, InterruptedException,ClassNotFoundException {
         ServerSocket server;
         Socket client_sock;
         server = new ServerSocket(this.serverPort);
@@ -45,16 +45,16 @@ public class PandoraBoxServer {
                 System.out.println("Accept error");
                 continue;
             }
-            System.out.println("Client connected");
+            //System.out.println("Client connected");
             Object[] data = Decoder.decodeRequest(client_sock.getInputStream());
-            DebugObjectPrinter dop = new DebugObjectPrinter();
-            System.out.println("RECIVED DATA:");
-            dop.print(data);
+            //DebugObjectPrinter dop = new DebugObjectPrinter();
+            //System.out.println("RECIVED DATA:");
+            //dop.print(data);
             OutputStream out = client_sock.getOutputStream();
             Object[] res;
             res = invoke(data);
-            System.out.println("SENDED DATA:");
-            dop.print(res);
+            //System.out.println("SENDED DATA:");
+            //dop.print(res);
             ByteArrayOutputStream msg = Encoder.encodeResult(res);
             out.write(msg.toByteArray());
             out.flush();
@@ -118,7 +118,8 @@ public class PandoraBoxServer {
             }
             catch (InvocationTargetException e){
                 result[0] = ERROR;
-                result[1] = "Method error:"+e.getMessage()+".Please refer to the publisher."+e.getMessage();
+                result[1] = "Method error:"+e.getTargetException().getMessage()+".Please refer to the publisher.";
+                e.getStackTrace();
             }
         }
         else{

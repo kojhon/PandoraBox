@@ -16,7 +16,7 @@ public class ServerUI extends JFrame {
     public void initialize(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.setSize(400,CityList.getInstance().size()*20+20+25);
+        this.setSize(400,CityList.getInstance().size()*20+20+20+25);
         this.setLayout(new BorderLayout());
         JPanel tablePanel = new JPanel();
         tablePanel.setLayout(new BorderLayout());
@@ -36,7 +36,8 @@ public class ServerUI extends JFrame {
         deleteButton.addActionListener(new DeleteActionListener());
         buttonPanel.add(insertButton);
         this.add(buttonPanel);
-
+        CityList.add("Введите город", "Введите погоду");
+        t.repaint();
         this.setVisible(true);
     }
 

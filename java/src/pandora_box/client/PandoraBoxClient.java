@@ -20,15 +20,15 @@ public class PandoraBoxClient {
         this.serverPort = port;
     }
 
-    public void getResult(String function_name, Object... argv) throws IOException {
+    public Object[] getResult(String function_name, Object... argv) throws IOException {
         Socket socket = null;
         try {
             ByteArrayOutputStream msg;
             msg = Encoder.encodeRequest(function_name, argv);
-            DebugObjectPrinter dop = new DebugObjectPrinter();
-            System.out.printf("Connection to server at %s:%d\n", serverIp, serverPort);
-            System.out.println("SENDED DATA:");
-            dop.print(function_name, argv);
+            //DebugObjectPrinter dop = new DebugObjectPrinter();
+            //System.out.printf("Connection to server at %s:%d\n", serverIp, serverPort);
+            //System.out.println("SENDED DATA:");
+            //dop.print(function_name, argv);
             socket = new Socket(this.serverIp, this.serverPort);
             OutputStream out = socket.getOutputStream();
 
@@ -36,10 +36,15 @@ public class PandoraBoxClient {
             out.flush();
 
             Object[] result = Decoder.decodeResult(socket.getInputStream());
-            System.out.println("RECIVED DATA:");
-            dop.print(result);
+            //System.out.println("RECIVED DATA:");
+            //dop.print(result);
+            return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            Object[] result = new Object[2];
+            result[0] = true;
+            result[1] = e.getMessage();
+            return result;
+            //e.printStackTrace();
         } finally {
             if (socket != null) {
                 socket.close();

@@ -15,6 +15,7 @@ public class Encoder {
         Boolean isError = (Boolean)argv[0];
         if (isError){
             writer.writeByte(1);
+            writer.write(((String)argv[1]).length()*2);
             writer.writeChars((String)argv[1]);
 
         }else{
@@ -91,6 +92,7 @@ public class Encoder {
                     }
                     byte element_type = getType(tmp);
                     writer.writeByte(element_type);
+                    writeDementiosSizes(element,writer);
                     arrayEncode(element, element_type, writer);
                     break;
             }
@@ -149,9 +151,19 @@ public class Encoder {
 
     }
 
+    private static void writeDementiosSizes(Object a, DataOutput writer) throws IOException {
+        int length = 0;
+        while (a.getClass().isArray()){
+            length = Array.getLength(a);
+            writer.writeByte(length);
+            a = Array.get(a,0);
+        }
+    }
+
     private static void arrayEncode(Object a, byte type, DataOutput writer) throws IOException {
+
         int length = Array.getLength(a);
-        writer.writeByte(length);
+        //writer.writeByte(length);
         if (Array.get(a, 0).getClass().isArray()) {
             for (int i = 0; i < length; i++) {
                 arrayEncode(Array.get(a, i), type, writer);

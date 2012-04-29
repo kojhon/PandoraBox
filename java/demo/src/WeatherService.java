@@ -11,9 +11,9 @@ public class WeatherService {
     public static String[] getCities(){
         LinkedList<CityWeather> cityWeatherList = CityList.getInstance();
         int count = cityWeatherList.size();
-        String[] cities = new String[count];
+        String[] cities = new String[count-1];
 
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count-1; i++){
             cities[i] = cityWeatherList.get(i).getCity();
         }
 
@@ -25,7 +25,7 @@ public class WeatherService {
         int count = cityWeatherList.size();
 
         for (int i = 0; i < count; i++){
-            if (cityWeatherList.get(i).getCity() == city){
+            if (cityWeatherList.get(i).getCity().equals(city)){
                 return cityWeatherList.get(i).getWeather();
             }
         }
