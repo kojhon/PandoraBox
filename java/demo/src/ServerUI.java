@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,17 +13,20 @@ import java.awt.event.ActionListener;
  */
 public class ServerUI extends JFrame {
     JTable t;
+    JScrollPane tablePanel;
 
     public void initialize(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.setSize(400,CityList.getInstance().size()*20+20+20+25);
+        this.setResizable(false);
+        this.setSize(600,150);
         this.setLayout(new BorderLayout());
-        JPanel tablePanel = new JPanel();
-        tablePanel.setLayout(new BorderLayout());
+        //JPanel tablePanel = new JPanel();
+        //tablePanel.setLayout(new BorderLayout());
         t = new JTable(new WeatherTableModel());
-        tablePanel.add(t,BorderLayout.CENTER);
-        this.add(tablePanel, BorderLayout.NORTH);
+        //tablePanel.add(t,BorderLayout.CENTER);
+        //this.add(tablePanel, BorderLayout.NORTH);
+        tablePanel = new JScrollPane(t);
+        this.add(tablePanel,BorderLayout.CENTER);
 
 
         JPanel buttonPanel = new JPanel();
@@ -35,7 +39,7 @@ public class ServerUI extends JFrame {
         insertButton.addActionListener(new AddActionListener());
         deleteButton.addActionListener(new DeleteActionListener());
         buttonPanel.add(insertButton);
-        this.add(buttonPanel);
+        this.add(buttonPanel, BorderLayout.SOUTH);
         CityList.add("Введите город", "Введите погоду");
         t.repaint();
         this.setVisible(true);
@@ -46,6 +50,7 @@ public class ServerUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             CityList.add("Введите город", "Введите погоду");
             t.repaint();
+            tablePanel.repaint();
         }
     }
 
@@ -54,6 +59,7 @@ public class ServerUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             CityList.remove(t.getSelectedRow());
             t.repaint();
+            tablePanel.repaint();
         }
     }
 
