@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,6 +49,7 @@ public class ServerUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             CityList.add("Введите город", "Введите погоду");
             t.repaint();
+            tablePanel.revalidate();
             tablePanel.repaint();
         }
     }
@@ -59,6 +59,7 @@ public class ServerUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             CityList.remove(t.getSelectedRow());
             t.repaint();
+            tablePanel.revalidate();
             tablePanel.repaint();
         }
     }
