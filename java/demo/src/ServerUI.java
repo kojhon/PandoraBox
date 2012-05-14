@@ -58,7 +58,7 @@ public class ServerUI extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             int index = t.getSelectedRow();
-            if (index < CityList.getInstance().size()-1){
+            if ((index < CityList.getInstance().size()-1)&&(index >= 0)){
                 CityList.remove(t.getSelectedRow());
                 t.repaint();
                 tablePanel.revalidate();
