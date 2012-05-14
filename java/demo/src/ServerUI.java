@@ -57,10 +57,13 @@ public class ServerUI extends JFrame {
     private final class DeleteActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            CityList.remove(t.getSelectedRow());
-            t.repaint();
-            tablePanel.revalidate();
-            tablePanel.repaint();
+            int index = t.getSelectedRow();
+            if (index < CityList.getInstance().size()-1){
+                CityList.remove(t.getSelectedRow());
+                t.repaint();
+                tablePanel.revalidate();
+                tablePanel.repaint();
+            }
         }
     }
 

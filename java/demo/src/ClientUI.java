@@ -32,7 +32,7 @@ public class ClientUI extends JFrame implements ActionListener{
 
     public void initialize(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(200,120);
+        this.setSize(200,126);
         this.setResizable(false);
         libPanel = new JPanel(new GridLayout(3,2));
         libPanel.add(new JLabel("Введите порт"));
@@ -59,9 +59,15 @@ public class ClientUI extends JFrame implements ActionListener{
         weatherLabel = new JLabel("");
         JPanel weatherPanel = new JPanel(new GridLayout(3,1));
         weatherPanel.add(cityList);
+        JPanel buttonPanel = new JPanel();
         JButton getWeatherButton = new JButton("Узнать");
-        getWeatherButton.addActionListener(new WeatherFormActionListener());
-        weatherPanel.add(getWeatherButton);
+        getWeatherButton.addActionListener(new getWeatherButtonListener());
+        JButton refreshButton = new JButton("Обновить");
+        refreshButton.addActionListener(new refreshButtonListener());
+        buttonPanel.add(getWeatherButton);
+        buttonPanel.add(refreshButton);
+        //weatherPanel.add(getWeatherButton);
+        weatherPanel.add(buttonPanel);
         weatherPanel.add(weatherLabel);
         this.add(weatherPanel);
         this.setVisible(true);
@@ -91,7 +97,7 @@ public class ClientUI extends JFrame implements ActionListener{
     }
 
 
-     class WeatherFormActionListener implements ActionListener{
+     class getWeatherButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             try{
                 Object[] res = client.getResult("getWeather",cityList.getSelectedItem());
@@ -100,6 +106,32 @@ public class ClientUI extends JFrame implements ActionListener{
                 }else{
                     weatherLabel.setText((String)res[1]);
                     weatherLabel.repaint();
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    class refreshButtonListener implements ActionListener{
+       public void actionPerformed(ActionEvent e) {
+            try{
+                Object[] res = client.getResult("getCities");
+                if ((Boolean)res[0]){
+                    JOptionPane.showMessageDialog(null,(String)res[1]);
+                }else{
+                    Object tmp = res[1];
+                    int length = Array.getLength(tmp);
+                    cities = new String[length];
+                    cities = (String[])tmp;
+                    //cityList.setModel(new JComboBox<String>(cities).getModel());
+                    cityList.removeAllItems();
+                    for (int i = 0; i < cities.length; i++){
+                        cityList.addItem(cities[i]);
+                    }
+                    cityList.repaint();
+                    weatherPanel.repaint();
+
                 }
             }catch (Exception ex){
                 ex.printStackTrace();

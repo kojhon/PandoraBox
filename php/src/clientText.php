@@ -1,22 +1,30 @@
+<?php session_start(); ?>
 <html>
 <head>
 <meta charset="UTF-8" />
 </head>
 <body>
 <?php
+include_once("./PandoraBox/PandoraBoxClient.php");
 if (!isset($_GET['ip'])){
 	$ip = "127.0.0.1";
 }else{
 	$ip = $_GET['ip'];
 }
 if (!isset($_GET['port'])){
-	$ip = 10001;
+	$port = 10001;
 }else{
-	$ip = $_GET['port'];
+	$port = $_GET['port'];
 }
-include_once("./PandoraBox/PandoraBoxClient.php");
-	$client = new PandoraBoxClient('127.0.0.1',10001);
-	$result = $client->getResult(iconv("UTF-8","UTF-16BE","getCities"));
+if (!isset($_SESSION['cityList'])){
+	$client = new PandoraBoxClient($ip,$port);
+	$_SESSION['cityList'] = $client->getResult(iconv("UTF-8","UTF-16BE","getCities"));
+}
+if (isset($_POST['smb2'])){
+	$client = new PandoraBoxClient($ip,$port);
+	$_SESSION['cityList'] = $client->getResult(iconv("UTF-8","UTF-16BE","getCities"));
+}
+$result = $_SESSION['cityList'];
 	if ($result[0] === false){
 ?>
 <form action="" method="POST">
@@ -40,8 +48,11 @@ include_once("./PandoraBox/PandoraBoxClient.php");
 </td>
 </tr>
 <tr>
-<td colspan="2">
+<td>
 	<input type="submit" name="smb" value="Узнать погоду"/>
+</td>
+<td>
+	<input type="submit" name="smb2" value="Обновить"/>
 </td>
 </tr>
 </table>
@@ -55,7 +66,7 @@ include_once("./PandoraBox/PandoraBoxClient.php");
 	</h2>
 <?php }
 if (isset($_POST['smb'])){
-	$client = new PandoraBoxClient('127.0.0.1',10001);
+	$client = new PandoraBoxClient($ip,$port);
 	$result = $client->getResult(iconv("UTF-8","UTF-16BE","getWeather"),iconv("UTF-8","UTF-16BE",$_POST['city']));
 //	var_dump($_POST);
 //	$result = $client->getResult("getWeather",$_POST['city']);
